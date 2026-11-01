@@ -56,3 +56,5 @@ bash scripts/capture_color_gstreamer.sh data/color-xhci-new MJPG 320 240
 OpenNI COLOR 暴露方式与官方 ColorReaderUVC 的早期失败记录未被追溯改写；本轮恢复的是已验证的 V4L2/GStreamer/OpenCV 路径，官方 libuvc 示例尚未在 xHCI 下复测。
 
 下一步主线：统一采集方向、核实当前模式内参/外参和 RGB–Depth 像素对应，再将彩色目标区域映射到有效深度，保留现有质量拒绝逻辑。
+
+后续已完成方向统一、SDK硬件D2C路径核查和三组人工对应点初检，见 [注册检查](rgbd-registration-check-2026-11-01.md)。完整几何、畸变和同步验收仍未完成。

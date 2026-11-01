@@ -23,6 +23,8 @@ extern "C" const char* astra_ir_error() { return error.c_str(); }
 extern "C" void astra_ir_close() {
     if (depth.isValid()) { depth.stop(); depth.destroy(); }
     if (ir.isValid()) { ir.stop(); ir.destroy(); }
+    if (device.isValid() && device.getImageRegistrationMode()!=openni::IMAGE_REGISTRATION_OFF)
+        device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_OFF);
     if (device.isValid()) device.close();
     if (initialized) { openni::OpenNI::shutdown(); initialized=false; }
 }
@@ -55,7 +57,7 @@ extern "C" int astra_scene_open(int* config,int capacity) {
     return 0;
 }
 
-static int openDepth(int* config,int capacity,bool unmirrored) {
+static int openDepth(int* config,int capacity,bool unmirrored,bool registered=false) {
     if (capacity<13) { error="Depth config buffer too small"; return -1; }
     error.clear();
     if (initialized) { error="Device is already open"; return -1; }
@@ -69,6 +71,10 @@ static int openDepth(int* config,int capacity,bool unmirrored) {
     }
     if (unmirrored && depth.setMirroringEnabled(false)!=openni::STATUS_OK) {
         fail("disable mirroring"); astra_ir_close(); return -1;
+    }
+    const auto registration=registered?openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR:openni::IMAGE_REGISTRATION_OFF;
+    if (device.setImageRegistrationMode(registration)!=openni::STATUS_OK) {
+        fail("set requested registration mode"); astra_ir_close(); return -1;
     }
     if (depth.start()!=openni::STATUS_OK) {
         fail("depth.start"); astra_ir_close(); return -1;
@@ -94,6 +100,9 @@ extern "C" int astra_depth_open(int* config,int capacity) {
 extern "C" int astra_point_open(int* config,int capacity) {
     return openDepth(config,capacity,true);
 }
+extern "C" int astra_registered_open(int* config,int capacity) {
+    return openDepth(config,capacity,true,true);
+}
 
 extern "C" int astra_depth_calibration(float* values,int capacity) {
     if (!depth.isValid() || capacity<30) { error="Invalid calibration request"; return -1; }
@@ -111,6 +120,30 @@ extern "C" int astra_depth_distortion_state(uint64_t* value) {
     if (!depth.isValid()) { error="Depth is not open"; return -1; }
     *value=0;
     return device.getProperty(XN_MODULE_PROPERTY_DISTORTION_STATE,value);
+}
+// Read-only capability and pixel-registration queries. Never enable hardware D2C here.
+extern "C" int astra_depth_registration_supported() {
+    if (!depth.isValid()) return -1;
+    return device.isImageRegistrationModeSupported(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR)?1:0;
+}
+extern "C" int astra_depth_registration_query(int mode,int u,int v,uint16_t raw,
+                                               int colorWidth,int colorHeight,int* output) {
+    if (!depth.isValid() || !output || mode<0 || mode>1 || u<0 || v<0 || !raw ||
+        colorWidth<=0 || colorHeight<=0) return -1;
+    const auto videoMode=depth.getVideoMode();
+    if (u>=videoMode.getResolutionX() || v>=videoMode.getResolutionY() ||
+        raw>depth.getMaxPixelValue() || device.getImageRegistrationMode()!=openni::IMAGE_REGISTRATION_OFF) {
+        error="Pixel registration query requires an in-range original unregistered depth pixel";
+        return -1;
+    }
+    XnPixelRegistration pixel={};
+    pixel.nDepthX=u; pixel.nDepthY=v; pixel.nDepthValue=raw;
+    pixel.nImageXRes=colorWidth; pixel.nImageYRes=colorHeight;
+    int size=sizeof(pixel);
+    const int property=mode?XN_STREAM_PROPERTY_PIXEL_D2C_REGISTRATION:XN_STREAM_PROPERTY_PIXEL_REGISTRATION;
+    const auto status=depth.getProperty(property,reinterpret_cast<uint8_t*>(&pixel),&size);
+    output[0]=pixel.nImageX; output[1]=pixel.nImageY; output[2]=size;
+    return status;
 }
 extern "C" int astra_depth_to_world(float u,float v,float raw,float* xyz) {
     if (!depth.isValid()) { error="Depth is not open"; return -1; }
