@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-01",
+  "device": "Orbbec Astra Pro Plus",
+  "raw_color_usb_permission": "0660 root:plugdev; user approved and applied",
+  "tests": [
+    {
+      "source": "REAL_CAMERA",
+      "program": "official ColorReaderUVC",
+      "log": "logs/color-official-libuvc-001.log",
+      "outer_time_limit_seconds": 10,
+      "exit_code": 124,
+      "device_open_success": true,
+      "stream_start_reported_success": true,
+      "reported_received_frames": 0,
+      "negotiated_width": 640,
+      "negotiated_height": 480,
+      "negotiated_fps": 30,
+      "negotiated_format": "MJPEG",
+      "acceptance": "FAILED_NO_FRAMES_REPORTED"
+    },
+    {
+      "source": "REAL_CAMERA",
+      "program": "official ColorReaderUVC",
+      "log": "logs/color-official-libuvc-002.log",
+      "outer_time_limit_seconds": 30,
+      "exit_code": 124,
+      "device_open_success": true,
+      "stream_start_reported_success": true,
+      "reported_received_frames": 0,
+      "negotiated_width": 640,
+      "negotiated_height": 480,
+      "negotiated_fps": 30,
+      "negotiated_format": "MJPEG",
+      "acceptance": "FAILED_NO_FRAMES_REPORTED"
+    }
+  ],
+  "hardware_fault_confirmed": false,
+  "next_step": "Wait for matte cardboard target at image center, approximately 0.6-1m away; collect raw depth for scene comparison",
+  "windows_native_comparison": {
+    "evidence_source": "USER_REPORTED",
+    "application": "Windows Camera",
+    "color_image": "normal and continuously updating",
+    "same_cable_and_port": "requested; no change reported",
+    "stream_configuration": "not recorded",
+    "agent_observed_windows": false
+  },
+  "diagnostic_priority": "VMware USB / Ubuntu capture path; exact cause not isolated",
+  "after_reconnect": {
+    "usb_pid": "2bc5:050f",
+    "uvcvideo_bound": true,
+    "v4l2_trial": "data/color-after-windows-001/color_report.json",
+    "jpeg_corruption_warnings": true,
+    "saved_image_review": "near-black with structured artifacts; not acceptable color",
+    "controller_changed": false
+  },
+  "openni_sensor_inventory": {
+    "depth_exposed": true,
+    "ir_exposed": true,
+    "color_exposed": false,
+    "log": "logs/sensor-inventory-001.log",
+    "read_only_query": true
+  },
+  "nivewer_screenshot_review": {
+    "evidence_source": "USER_PROVIDED_SCREENSHOTS_AND_DEVICE_INVENTORY",
+    "first_image_left": "depth pseudocolor",
+    "first_image_right": "infrared grayscale",
+    "second_image": "primarily depth display",
+    "registration": "off as shown in status text",
+    "large_depth_invalid_regions": true,
+    "rgb_stream_validated_by_these_images": false
+  }
+}

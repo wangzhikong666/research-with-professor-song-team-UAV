@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-01",
+  "source": "REAL_CAMERA",
+  "factory_parameters_file": "data/calibration-stage2-001/calibration.json",
+  "point_session": "data/depth-point-stage2-001",
+  "actual_user_clicks": [
+    {
+      "valid": true,
+      "pixel_uv": [
+        376,
+        251
+      ],
+      "position_m": [
+        0.08879483032226562,
+        0.017441850662231445,
+        0.92
+      ],
+      "raw_depth": 920,
+      "depth_mm": 920,
+      "quality": {
+        "neighborhood": "3x3",
+        "valid_neighbors": 9,
+        "total_neighbors": 9,
+        "minimum_valid_neighbors": 7,
+        "depth_spread_mm": 0.0,
+        "maximum_allowed_spread_mm": 18.400000000000002,
+        "depth_selection": "Exact clicked pixel; no median substitution or hole filling"
+      },
+      "reason": "DEPTH_QUALITY_PASSED",
+      "source": "REAL_CAMERA",
+      "input_type": "user_click",
+      "measured_at_utc": "2026-11-01T05:45:36.106740+00:00",
+      "host_received_utc": "2026-11-01T05:45:36.040688+00:00",
+      "device_timestamp_us": 39271574,
+      "frame_index": 874,
+      "frame_age_seconds": 0.06614011000056053,
+      "coordinate_frame": "camera_depth_optical_sdk",
+      "length_unit": "m",
+      "geometry_verified": false,
+      "physical_accuracy_verified": false,
+      "reference_point": "Visible surface at clicked depth pixel; not object center or grasp point",
+      "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+      "display_xyz_mm": [
+        88.79483032226562,
+        17.441850662231445,
+        920.0
+      ],
+      "sdk_native_xyz_mm": [
+        88.79483032226562,
+        -17.441850662231445,
+        920.0
+      ],
+      "roundtrip_pixel_error": 0.0,
+      "raw_depth_file": "user_click_0002_depth.pgm"
+    },
+    {
+      "valid": false,
+      "pixel_uv": [
+        386,
+        313
+      ],
+      "position_m": null,
+      "raw_depth": 0,
+      "depth_mm": null,
+      "reason": "NO_DEPTH",
+      "source": "REAL_CAMERA",
+      "input_type": "user_click",
+      "measured_at_utc": "2026-11-01T05:45:40.248614+00:00",
+      "host_received_utc": "2026-11-01T05:45:40.241009+00:00",
+      "device_timestamp_us": 43472099,
+      "frame_index": 1000,
+      "frame_age_seconds": 0.007710077999945497,
+      "coordinate_frame": "camera_depth_optical_sdk",
+      "length_unit": "m",
+      "geometry_verified": false,
+      "physical_accuracy_verified": false,
+      "reference_point": "Visible surface at clicked depth pixel; not object center or grasp point",
+      "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+      "raw_depth_file": "user_click_0003_depth.pgm"
+    }
+  ],
+  "offline_quality_checks": 8,
+  "basic_click_pipeline_verified": true,
+  "distortion_and_geometry_verified": false,
+  "rgb_used": false
+}

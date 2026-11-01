@@ -1,0 +1,120 @@
+{
+  "source": "REAL_CAMERA_SAVED_FRAME_VERIFICATION",
+  "checks": [
+    {
+      "record": "data/depth-target-stage3-002/chat_snapshot_0002.json",
+      "source": "REAL_CAMERA",
+      "raw_shape": [
+        480,
+        640
+      ],
+      "raw_dtype": "uint16",
+      "frame_index": 211,
+      "host_received_utc": "2026-11-01T06:13:20.099348+00:00",
+      "valid": true,
+      "reason": "STABLE_FOREGROUND_SURFACE",
+      "pixel_uv": [
+        508,
+        247
+      ],
+      "raw_point": 741,
+      "point_in_mask": true,
+      "mask_area": 7171,
+      "background_point": 809.0,
+      "closer_than_background_mm": 68.0,
+      "position_m": [
+        0.24009768676757812,
+        0.008939817428588867,
+        0.741
+      ]
+    },
+    {
+      "record": "data/depth-target-stage3-002/chat_snapshot_0003.json",
+      "source": "REAL_CAMERA",
+      "raw_shape": [
+        480,
+        640
+      ],
+      "raw_dtype": "uint16",
+      "frame_index": 1090,
+      "host_received_utc": "2026-11-01T06:13:49.537601+00:00",
+      "valid": true,
+      "reason": "STABLE_FOREGROUND_SURFACE",
+      "pixel_uv": [
+        505,
+        248
+      ],
+      "raw_point": 746,
+      "point_in_mask": true,
+      "mask_area": 7283,
+      "background_point": 816.0,
+      "closer_than_background_mm": 70.0,
+      "position_m": [
+        0.237860595703125,
+        0.010285853385925293,
+        0.746
+      ]
+    },
+    {
+      "record": "data/depth-target-stage3-002/auto_candidate_0001.json",
+      "source": "REAL_CAMERA",
+      "raw_shape": [
+        480,
+        640
+      ],
+      "raw_dtype": "uint16",
+      "frame_index": 17,
+      "host_received_utc": "2026-11-01T06:13:11.703982+00:00",
+      "valid": true,
+      "reason": "STABLE_FOREGROUND_SURFACE",
+      "pixel_uv": [
+        505,
+        248
+      ],
+      "raw_point": 746,
+      "point_in_mask": true,
+      "mask_area": 7197,
+      "background_point": 816.0,
+      "closer_than_background_mm": 70.0,
+      "position_m": [
+        0.237860595703125,
+        0.010285853385925293,
+        0.746
+      ]
+    }
+  ],
+  "interpretation": "Foreground regions measured; semantic object identity and physical XYZ accuracy unverified. Removal negative test currently failed.",
+  "geometry_verified": false,
+  "physical_accuracy_verified": false,
+  "target_identity_verified": false,
+  "removal_test_with_old_background_passed": false,
+  "fresh_background_empty_scene": {
+    "record": "data/depth-target-stage3-002/chat_snapshot_0005.json",
+    "background": "background_002.npz",
+    "source": "REAL_CAMERA",
+    "host_received_utc": "2026-11-01T06:15:31.986703+00:00",
+    "frame_index": 3218,
+    "reason": "NO_FOREGROUND",
+    "valid": false,
+    "position_m": null,
+    "mask_area": 0,
+    "raw_dtype": "uint16",
+    "raw_shape": [
+      480,
+      640
+    ]
+  },
+  "reinserted_object_test": {
+    "source": "REAL_CAMERA",
+    "record": "data/depth-target-stage3-002/chat_snapshot_0006.json",
+    "reason": "INSUFFICIENT_CURRENT_DEPTH",
+    "valid": false,
+    "position_m": null,
+    "no_depth_pixels": 260516,
+    "nonzero_below_600mm_pixels": 40448,
+    "within_working_range_pixels": 6236,
+    "comparable_background_pixels": 1928,
+    "target_depth_verified": false,
+    "note": "Central former background mainly raw zero; near values elsewhere are not assigned to target"
+  }
+}

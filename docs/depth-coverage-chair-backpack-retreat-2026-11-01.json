@@ -1,0 +1,83 @@
+{
+  "source": "REAL_CAMERA_SAVED_FRAME_VERIFICATION",
+  "session": "data/depth-coverage-chair-backpack-retreat-001",
+  "user_reported_change": "Camera moved backward approximately 20-30cm and set on fixed support; chair/backpack kept in place",
+  "summary": {
+    "source": "REAL_CAMERA",
+    "frames": 300,
+    "first_device_timestamp_us": 1466849,
+    "last_device_timestamp_us": 11434762,
+    "whole_image_mean_fraction": {
+      "zero_pixels": 0.42611744791666667,
+      "nonzero_below_600mm_pixels": 0.00013174913194444443,
+      "600_to_4000mm_pixels": 0.3781879014756944,
+      "above_4000mm_pixels": 0.19556290147569444
+    },
+    "center_roi_mean_fraction": {
+      "zero_pixels": 0.1652722222222222,
+      "nonzero_below_600mm_pixels": 0.0,
+      "600_to_4000mm_pixels": 0.8347277777777777,
+      "above_4000mm_pixels": 0.0
+    },
+    "physical_accuracy_verified": false
+  },
+  "user_indicated_surface_checks": [
+    {
+      "user_indicated_surface": "backpack_front_user_indicated",
+      "identity_source": "User confirmed click order",
+      "semantic_identity_verified_by_algorithm": false,
+      "record": "data/depth-coverage-chair-backpack-retreat-001/user_click_0004.json",
+      "host_received_utc": "2026-11-01T06:42:16.616063+00:00",
+      "frame_index": 1308,
+      "pixel_uv": [
+        419,
+        292
+      ],
+      "raw_depth": 737,
+      "depth_mm": 737,
+      "category": "NONZERO_600_TO_4000MM",
+      "note": "Raw sensor report only; not independently measured distance or accuracy certification",
+      "saved_raw_value_verified": true,
+      "neighborhood_3x3_nonzero": 9,
+      "neighborhood_3x3_spread_mm": 3,
+      "physical_accuracy_verified": false
+    },
+    {
+      "user_indicated_surface": "chair_back_user_indicated",
+      "identity_source": "User confirmed click order",
+      "semantic_identity_verified_by_algorithm": false,
+      "record": "data/depth-coverage-chair-backpack-retreat-001/user_click_0005.json",
+      "host_received_utc": "2026-11-01T06:42:18.017177+00:00",
+      "frame_index": 1350,
+      "pixel_uv": [
+        399,
+        112
+      ],
+      "raw_depth": 1083,
+      "depth_mm": 1083,
+      "category": "NONZERO_600_TO_4000MM",
+      "note": "Raw sensor report only; not independently measured distance or accuracy certification",
+      "saved_raw_value_verified": true,
+      "neighborhood_3x3_nonzero": 9,
+      "neighborhood_3x3_spread_mm": 7,
+      "physical_accuracy_verified": false
+    }
+  ],
+  "physical_accuracy_verified": false,
+  "acquisition_check": {
+    "source": "REAL_CAMERA",
+    "frames": 300,
+    "received_fps": 29.99624896405095,
+    "index_gap_count": 0,
+    "all_zero_frames": 0,
+    "center_pixel_uv": [
+      320,
+      240
+    ],
+    "center_pixel_reference": "Fixed image pixel; not identified as the backpack",
+    "center_nonzero_frames": 300,
+    "center_depth_min_mm": 913,
+    "center_depth_max_mm": 915,
+    "physical_accuracy_verified": false
+  }
+}

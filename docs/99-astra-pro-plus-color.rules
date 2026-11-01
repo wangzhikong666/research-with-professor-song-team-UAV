@@ -1,0 +1,2 @@
+# Optional raw USB permission required only by the official libuvc color example.
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="2bc5", ATTR{idProduct}=="050f", MODE="0660", GROUP="plugdev", TAG+="uaccess"

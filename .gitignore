@@ -1,0 +1,7 @@
+.venv/
+third_party/
+build/
+data/
+logs/
+__pycache__/
+*.pyc

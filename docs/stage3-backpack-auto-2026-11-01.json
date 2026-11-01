@@ -1,0 +1,58 @@
+{
+  "source": "REAL_CAMERA_SAVED_EVIDENCE_VERIFICATION",
+  "session": "data/depth-target-backpack-stage3-001",
+  "algorithm": "Depth background subtraction; foreground mask and automatic valid interior surface pixel",
+  "semantic_classification": false,
+  "scene_identity_source": "User reports replacing backpack on unchanged chair",
+  "before_object_and_object_checks": [
+    {
+      "record": "data/depth-target-backpack-stage3-001/chat_snapshot_0001.json",
+      "source": "REAL_CAMERA",
+      "reason": "NO_FOREGROUND",
+      "valid": false,
+      "position_m": null,
+      "frame_index": 1006,
+      "host_received_utc": "2026-11-01T06:55:09.179377+00:00",
+      "mask_nonzero_pixels": 0,
+      "raw_depth_dtype": "uint16"
+    },
+    {
+      "record": "data/depth-target-backpack-stage3-001/chat_snapshot_0003.json",
+      "source": "REAL_CAMERA",
+      "reason": "STABLE_FOREGROUND_SURFACE",
+      "valid": true,
+      "position_m": [
+        0.1124361572265625,
+        0.113699462890625,
+        0.733
+      ],
+      "frame_index": 1707,
+      "host_received_utc": "2026-11-01T06:55:34.177918+00:00",
+      "mask_nonzero_pixels": 50340,
+      "raw_depth_dtype": "uint16",
+      "pixel_uv": [
+        409,
+        330
+      ],
+      "raw_depth": 733,
+      "background_depth": 940.0,
+      "foreground_closer_mm": 207.0,
+      "point_in_mask": true
+    }
+  ],
+  "after_removal_check": {
+    "record": "data/depth-target-backpack-stage3-001/chat_snapshot_0004.json",
+    "source": "REAL_CAMERA",
+    "host_received_utc": "2026-11-01T06:56:49.038703+00:00",
+    "frame_index": 3899,
+    "valid": false,
+    "position_m": null,
+    "reason": "NO_FOREGROUND",
+    "mask_nonzero_pixels": 0,
+    "raw_depth_dtype": "uint16"
+  },
+  "geometry_verified": false,
+  "physical_accuracy_verified": false,
+  "fixed_scene_basic_foreground_workflow_passed": true,
+  "scope": "Single demonstrated insert/remove cycle in current fixed camera/chair scene. Generic foreground detection, not semantic backpack classification, physical accuracy or robot operation."
+}

@@ -1,0 +1,93 @@
+{
+  "date": "2026-11-01",
+  "source": "REAL_CAMERA",
+  "experiment": "single depth, user-reported fixed matte scene",
+  "data_directory": "data/depth-only-static-002",
+  "mode": {
+    "width": 640,
+    "height": 480,
+    "nominal_fps": 30,
+    "pixel_format_enum": 100,
+    "millimeters_per_raw_unit": 1.0,
+    "mirroring": true,
+    "image_registration_mode": 0
+  },
+  "ir_enabled": false,
+  "report": {
+    "source": "REAL_CAMERA",
+    "received_frames": 1800,
+    "sensor_duration_seconds": 59.974162,
+    "received_fps_from_sensor_timestamps": 29.996250718767858,
+    "max_sensor_interval_seconds": 0.033338,
+    "non_increasing_sensor_timestamps": 0,
+    "frame_index_gaps": 0,
+    "all_invalid_frames": 0,
+    "all_invalid_frame_fraction": 0.0,
+    "longest_consecutive_all_invalid_frames": 0,
+    "host_read_duration_seconds": 59.974560544998894,
+    "received_fps_from_host_read_times": 29.996051386657694,
+    "last_frame_valid_fraction": 0.30486979166666667,
+    "last_frame_center_raw": 901,
+    "note": "SDK maximum is an encoding/driver limit, not a guaranteed usable physical range. No alignment or accuracy acceptance implied.",
+    "central_surface_check": {
+      "roi": {
+        "x": 288,
+        "y": 216,
+        "width": 64,
+        "height": 48,
+        "verified_inside_target": false
+      },
+      "warmup_excluded_sensor_seconds": 1.0,
+      "remaining_frames": 1770,
+      "center_valid_frame_fraction": 1.0,
+      "center_depth_mm": {
+        "samples": 1770,
+        "min": 898.0,
+        "median": 901.0,
+        "max": 901.0,
+        "p05": 898.0,
+        "p95": 901.0,
+        "sample_std": 1.4969716774485855,
+        "median_absolute_deviation": 0.0
+      },
+      "roi_valid_fraction_per_frame": {
+        "samples": 1770,
+        "min": 0.9505208333333334,
+        "median": 0.9661458333333334,
+        "max": 0.984375,
+        "p05": 0.9583333333333334,
+        "p95": 0.9752604166666666,
+        "sample_std": 0.004992933417381689,
+        "median_absolute_deviation": 0.00390625
+      },
+      "roi_frame_median_depth_mm": {
+        "samples": 1770,
+        "min": 898.0,
+        "median": 898.0,
+        "max": 901.0,
+        "p05": 898.0,
+        "p95": 901.0,
+        "sample_std": 0.9065006057626638,
+        "median_absolute_deviation": 0.0
+      },
+      "interpretation": "Center is a fixed pixel ray. ROI is not object segmentation. Temporal variation assumes a stationary scene and is not absolute accuracy. ROI median assumes valid samples mostly belong to one surface."
+    },
+    "last_valid_pixel_bounds": {
+      "x_min": 4,
+      "x_max": 565,
+      "y_min": 186,
+      "y_max": 479
+    },
+    "valid_fraction_per_frame": {
+      "samples": 1800,
+      "min": 0.29671875,
+      "median": 0.3057356770833333,
+      "max": 0.31875,
+      "p05": 0.30122330729166663,
+      "p95": 0.3111126302083333,
+      "sample_std": 0.0029876793472121584,
+      "median_absolute_deviation": 0.0015364583333333237
+    }
+  },
+  "acceptance": "Current-scene one-minute single-depth acquisition and raw saving verified; RGB and absolute accuracy unverified"
+}
