@@ -1,0 +1,18 @@
+{
+  "device": "Orbbec Astra Pro Plus",
+  "sdk": "Orbbec OpenNI",
+  "version": "2.3.0.86-beta6",
+  "github_release_tag": "v2.3.0.86-beat6",
+  "github_release_published": "2025-01-13",
+  "architecture": "linux_x64",
+  "asset_size_bytes": 220783253,
+  "asset": "OpenNI_2.3.0.86_202210111154_4c8f5aa4_beta6_linux_x64.zip",
+  "url": "https://github.com/orbbec/OpenNI_SDK/releases/download/v2.3.0.86-beat6/OpenNI_2.3.0.86_202210111154_4c8f5aa4_beta6_linux_x64.zip",
+  "observed_sha256": "2240d645f3127bfcefbd2909be35bb35a446661e6a76d97dead414a4c5d684ad",
+  "checksum_provenance": "Computed locally after HTTPS download; release API provides no digest for this asset. Not a vendor-signed checksum.",
+  "runtime_package": "freeglut3_2.8.1-6_amd64.deb",
+  "runtime_source": "Ubuntu jammy/universe, apt-get download using configured Ubuntu archive",
+  "runtime_sha256": "50565a12341fc0c9ba012bd6fea82f8180ec7f153ef0cef16a33c2156d563634",
+  "runtime_installation": "Extracted locally with dpkg-deb, not installed system-wide",
+  "verified_on": "2026-11-01"
+}

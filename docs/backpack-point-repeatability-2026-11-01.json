@@ -1,0 +1,149 @@
+{
+  "source": "REAL_CAMERA_SAVED_EVIDENCE_VERIFICATION",
+  "runs": [
+    {
+      "directory": "data/backpack-point-repeatability-001",
+      "source": "REAL_CAMERA",
+      "summary": {
+        "source": "REAL_CAMERA",
+        "complete": true,
+        "requested_frames": 300,
+        "recorded_frames": 300,
+        "accepted_frames": 280,
+        "rejected_frames": 20,
+        "rejected_fraction": 0.06666666666666667,
+        "zero_depth_frames": 17,
+        "longest_rejected_run_frames": 2,
+        "longest_zero_depth_run_frames": 2,
+        "all_zero_image_frames": 0,
+        "reasons": {
+          "DEPTH_QUALITY_AND_SDK_PASSED": 280,
+          "NO_DEPTH": 17,
+          "SPARSE_NEIGHBORHOOD": 3
+        },
+        "device_duration_seconds": 17.902237,
+        "received_fps": 16.701823353137378,
+        "index_gap_events": 0,
+        "missing_indices": 0,
+        "nonmonotonic_index_events": 0,
+        "nonmonotonic_timestamp_events": 0,
+        "pixel_uv": [
+          419,
+          292
+        ],
+        "coordinate_frame": "camera_depth_optical_sdk",
+        "xyz_mm": {
+          "X": {
+            "samples": 280,
+            "mean": 125.91951585497175,
+            "sample_std": 0.19026256548001244,
+            "min": 125.41068267822267,
+            "max": 126.4344482421875
+          },
+          "Y": {
+            "samples": 280,
+            "mean": 66.13954364231654,
+            "sample_std": 0.09993576404199805,
+            "min": 65.87228393554688,
+            "max": 66.4100112915039
+          },
+          "Z": {
+            "samples": 280,
+            "mean": 737.9821428571429,
+            "sample_std": 1.1150818705749803,
+            "min": 735.0,
+            "max": 741.0
+          }
+        },
+        "statistics": "Sample standard deviation (ddof=1); rejected frames excluded from XYZ statistics",
+        "interpretation": "Fixed image ray under user-confirmed static scene; X and Y changes derive from Z through the same SDK model, not independent lateral accuracy tests",
+        "reference_point": "User-indicated backpack visible surface pixel; fixed image ray, not object center or tracking",
+        "geometry_verified": false,
+        "physical_accuracy_verified": false,
+        "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+        "absolute_accuracy_reference": "Deferred by user; no independent physical reference used",
+        "saved_raw_patches_verified": true
+      },
+      "all_csv_and_raw_patch_samples_verified": true,
+      "invalid_coordinates_are_null_or_empty": true,
+      "full_raw_snapshots_verified": [
+        "sample_0001_depth.pgm",
+        "sample_0150_depth.pgm",
+        "sample_0300_depth.pgm"
+      ]
+    },
+    {
+      "directory": "data/backpack-point-repeatability-002",
+      "source": "REAL_CAMERA",
+      "summary": {
+        "source": "REAL_CAMERA",
+        "complete": true,
+        "requested_frames": 300,
+        "recorded_frames": 300,
+        "accepted_frames": 264,
+        "rejected_frames": 36,
+        "rejected_fraction": 0.12,
+        "zero_depth_frames": 27,
+        "longest_rejected_run_frames": 7,
+        "longest_zero_depth_run_frames": 7,
+        "all_zero_image_frames": 0,
+        "reasons": {
+          "DEPTH_QUALITY_AND_SDK_PASSED": 264,
+          "NO_DEPTH": 27,
+          "SPARSE_NEIGHBORHOOD": 9
+        },
+        "device_duration_seconds": 10.201275,
+        "received_fps": 29.310061732479518,
+        "index_gap_events": 0,
+        "missing_indices": 0,
+        "nonmonotonic_index_events": 0,
+        "nonmonotonic_timestamp_events": 0,
+        "pixel_uv": [
+          419,
+          292
+        ],
+        "coordinate_frame": "camera_depth_optical_sdk",
+        "xyz_mm": {
+          "X": {
+            "samples": 264,
+            "mean": 126.04083806818181,
+            "sample_std": 0.19687746025055375,
+            "min": 125.41068267822267,
+            "max": 126.4344482421875
+          },
+          "Y": {
+            "samples": 264,
+            "mean": 66.20326851353501,
+            "sample_std": 0.10341045146836818,
+            "min": 65.87228393554688,
+            "max": 66.4100112915039
+          },
+          "Z": {
+            "samples": 264,
+            "mean": 738.6931818181819,
+            "sample_std": 1.1538458214788534,
+            "min": 735.0,
+            "max": 741.0
+          }
+        },
+        "statistics": "Sample standard deviation (ddof=1); rejected frames excluded from XYZ statistics",
+        "interpretation": "Fixed image ray under user-confirmed static scene; X and Y changes derive from Z through the same SDK model, not independent lateral accuracy tests",
+        "reference_point": "User-indicated backpack visible surface pixel; fixed image ray, not object center or tracking",
+        "geometry_verified": false,
+        "physical_accuracy_verified": false,
+        "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+        "absolute_accuracy_reference": "Deferred by user; no independent physical reference used",
+        "saved_raw_patches_verified": true
+      },
+      "all_csv_and_raw_patch_samples_verified": true,
+      "invalid_coordinates_are_null_or_empty": true,
+      "full_raw_snapshots_verified": [
+        "sample_0001_depth.pgm",
+        "sample_0150_depth.pgm",
+        "sample_0300_depth.pgm"
+      ]
+    }
+  ],
+  "physical_accuracy_verified": false,
+  "geometry_verified": false
+}
