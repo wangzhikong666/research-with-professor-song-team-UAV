@@ -1,0 +1,187 @@
+{
+  "source": "REAL_CAMERA_AND_USER_REPORTED_CONTROLLER_CHANGE",
+  "vmware_host": "Workstation 17.5.0 build-22583795 (user report)",
+  "guest_kernel": "6.8.0-138-generic",
+  "controller_after": "xhci_hcd; cameras at 480M",
+  "usb_color": "2bc5:050f bus003 device006; uvcvideo /dev/video0",
+  "usb_depth": "2bc5:060f bus003 device005",
+  "permissions_after_reboot": "Both raw USB nodes plugdev 0660; video0 desktop-user rw ACL",
+  "low_resolution": {
+    "directory": "data/color-xhci-mjpg320-001",
+    "buffer_count": 30,
+    "decodable_buffers": 30,
+    "unique_hashes": 30,
+    "raw_jpeg_marker_and_dimension_checks": true,
+    "visual_review_passed": true
+  },
+  "color_live": {
+    "source": "REAL_CAMERA",
+    "device": "/dev/video0",
+    "started_utc": "2026-11-01T09:29:48.973758+00:00",
+    "opencv": "4.5.4",
+    "config": {
+      "width": 640.0,
+      "height": 480.0,
+      "nominal_fps": 30.0,
+      "transport_fourcc": "MJPG",
+      "decoded_format": "BGR uint8"
+    },
+    "actual_frame_shape": [
+      480,
+      640,
+      3
+    ],
+    "frames": 485,
+    "read_failures": 0,
+    "elapsed_seconds": 30.051111665000008,
+    "observed_fps": 16.698293299151377,
+    "maximum_host_frame_interval_seconds": 0.48583532300006027,
+    "timestamps": "Host monotonic read-return times; NOT sensor exposure timestamps",
+    "rate_caution": "Decoded read-return count is NOT verified sensor FPS; corrupt or repeated frames may be counted",
+    "acceptance": "RAW_FRAMES_RECEIVED_IMAGE_QUALITY_REQUIRES_REVIEW",
+    "rgb_depth_alignment_verified": false,
+    "hardware_synchronized_with_depth": false
+  },
+  "user_preview_confirmation": "Color normal; frame follows hand motion continuously",
+  "concurrent_color": {
+    "source": "REAL_CAMERA",
+    "device": "/dev/video0",
+    "started_utc": "2026-11-01T09:31:28.803902+00:00",
+    "opencv": "4.5.4",
+    "config": {
+      "width": 640.0,
+      "height": 480.0,
+      "nominal_fps": 30.0,
+      "transport_fourcc": "MJPG",
+      "decoded_format": "BGR uint8"
+    },
+    "actual_frame_shape": [
+      480,
+      640,
+      3
+    ],
+    "frames": 235,
+    "read_failures": 0,
+    "elapsed_seconds": 15.04713686599996,
+    "observed_fps": 16.73657999725245,
+    "maximum_host_frame_interval_seconds": 0.06486090900000363,
+    "timestamps": "Host monotonic read-return times; NOT sensor exposure timestamps",
+    "rate_caution": "Decoded read-return count is NOT verified sensor FPS; corrupt or repeated frames may be counted",
+    "acceptance": "RAW_FRAMES_RECEIVED_IMAGE_QUALITY_REQUIRES_REVIEW",
+    "rgb_depth_alignment_verified": false,
+    "hardware_synchronized_with_depth": false
+  },
+  "concurrent_depth_config": {
+    "source": "REAL_CAMERA",
+    "sdk_version": "2.3.0.86",
+    "width": 640,
+    "height": 480,
+    "nominal_fps": 30,
+    "pixel_format_enum": 100,
+    "millimeters_per_raw_unit": 1,
+    "sdk_min_raw": 0,
+    "sdk_max_raw": 10000,
+    "mirroring": true,
+    "image_registration_mode": 0,
+    "raw_file": "depth_raw.pgm",
+    "raw_encoding": "P5 uint16 big-endian; no scaling or filtering",
+    "rgb_depth_alignment_verified": false,
+    "central_roi": {
+      "x": 288,
+      "y": 216,
+      "width": 64,
+      "height": 48,
+      "verified_inside_target": false
+    },
+    "roi_caution": "Fixed image ROI, not a segmented object. Median assumes most valid pixels lie on the same surface."
+  },
+  "concurrent_depth_report": {
+    "source": "REAL_CAMERA",
+    "received_frames": 300,
+    "sensor_duration_seconds": 10.534649,
+    "received_fps_from_sensor_timestamps": 28.38253082755771,
+    "max_sensor_interval_seconds": 0.600075,
+    "non_increasing_sensor_timestamps": 0,
+    "frame_index_gaps": 0,
+    "all_invalid_frames": 0,
+    "all_invalid_frame_fraction": 0.0,
+    "longest_consecutive_all_invalid_frames": 0,
+    "host_read_duration_seconds": 10.533142999999999,
+    "received_fps_from_host_read_times": 28.38658888424851,
+    "last_frame_valid_fraction": 0.5854427083333333,
+    "last_frame_center_raw": 0,
+    "note": "SDK maximum is an encoding/driver limit, not a guaranteed usable physical range. No alignment or accuracy acceptance implied.",
+    "central_surface_check": {
+      "roi": {
+        "x": 288,
+        "y": 216,
+        "width": 64,
+        "height": 48,
+        "verified_inside_target": false
+      },
+      "warmup_excluded_sensor_seconds": 1.0,
+      "remaining_frames": 270,
+      "center_valid_frame_fraction": 0.0,
+      "center_depth_mm": {
+        "samples": 0
+      },
+      "roi_valid_fraction_per_frame": {
+        "samples": 270,
+        "min": 0.4348958333333333,
+        "median": 0.4661458333333333,
+        "max": 0.5078125,
+        "p05": 0.44850260416666665,
+        "p95": 0.48828125,
+        "sample_std": 0.012111714328976337,
+        "median_absolute_deviation": 0.0078125
+      },
+      "roi_frame_median_depth_mm": {
+        "samples": 270,
+        "min": 4335.0,
+        "median": 4390.0,
+        "max": 4390.0,
+        "p05": 4335.0,
+        "p95": 4390.0,
+        "sample_std": 16.254973079041317,
+        "median_absolute_deviation": 0.0
+      },
+      "interpretation": "Center is a fixed pixel ray. ROI is not object segmentation. Temporal variation assumes a stationary scene and is not absolute accuracy. ROI median assumes valid samples mostly belong to one surface."
+    },
+    "last_valid_pixel_bounds": {
+      "x_min": 4,
+      "x_max": 635,
+      "y_min": 0,
+      "y_max": 467
+    },
+    "valid_fraction_per_frame": {
+      "samples": 300,
+      "min": 0.5504036458333333,
+      "median": 0.5869140625,
+      "max": 0.6240104166666667,
+      "p05": 0.5632838541666667,
+      "p95": 0.6044212239583333,
+      "sample_std": 0.011619666036401336,
+      "median_absolute_deviation": 0.006445312500000022
+    }
+  },
+  "raw_depth_dtype_and_value_check_passed": true,
+  "jpeg_warning_lines": {
+    "color-xhci-live640-001": [
+      "Corrupt JPEG data: 8652 extraneous bytes before marker 0xd8"
+    ],
+    "color-xhci-concurrent-001": []
+  },
+  "rgb_preview_acceptance": "LIVE_COLOR_PREVIEW_RECOVERED; 30s run retained one JPEG decoder warning and observed rate ~16.7 FPS",
+  "concurrent_capture_acceptance": "Both independent streams delivered data; not a synchronized or registered RGB-D pair",
+  "rgb_depth_alignment_verified": false,
+  "hardware_synchronization_verified": false,
+  "geometry_verified": false,
+  "physical_accuracy_verified": false,
+  "causality_note": "RGB recovered after controller switch, guest reboot and USB re-enumeration; no EHCI rollback reproduction or unique defect attribution",
+  "remaining_limitations": [
+    "No complete per-frame visual audit of 485 frames",
+    "One JPEG extraneous-byte warning in 30s preview",
+    "Request 30 FPS, application observed ~16.7 FPS",
+    "No long-duration RGB reliability, RGB-depth registration or hardware sync acceptance"
+  ]
+}

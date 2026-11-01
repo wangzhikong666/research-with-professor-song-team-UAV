@@ -1,0 +1,276 @@
+{
+  "source": "REAL_CAMERA_SAVED_IMAGES_AND_USER_MANUAL_POINT_CORRESPONDENCES",
+  "hardware_d2c_support": true,
+  "factory_rotation": [
+    [
+      0.9999932050704956,
+      -0.0008028767188079655,
+      0.0035941950045526028
+    ],
+    [
+      0.0008114104857668281,
+      0.9999968409538269,
+      -0.0023734946735203266
+    ],
+    [
+      -0.0035922781098634005,
+      0.002376394812017679,
+      0.999990701675415
+    ]
+  ],
+  "factory_translation_field": [
+    -24.9228572845459,
+    -0.06744437664747238,
+    -1.7566145658493042
+  ],
+  "translation_unit_interpretation": "Same metric scale as native SDK depth inputs; current DEPTH_1_MM uses mm",
+  "direction_evidence": [
+    {
+      "source": "SYNTHETIC_API_MODEL_CHECK_NOT_PHYSICAL_ACCURACY",
+      "depth_input": [
+        320,
+        240,
+        1000
+      ],
+      "sdk_uv": [
+        311,
+        237
+      ],
+      "factory_direct_Rt_projection": [
+        311.66660167788484,
+        237.10516871621496
+      ],
+      "integer_floor_matches": true
+    },
+    {
+      "source": "SYNTHETIC_API_MODEL_CHECK_NOT_PHYSICAL_ACCURACY",
+      "depth_input": [
+        100,
+        100,
+        1000
+      ],
+      "sdk_uv": [
+        105,
+        105
+      ],
+      "factory_direct_Rt_projection": [
+        105.80369655717891,
+        105.85880437018017
+      ],
+      "integer_floor_matches": true
+    },
+    {
+      "source": "SYNTHETIC_API_MODEL_CHECK_NOT_PHYSICAL_ACCURACY",
+      "depth_input": [
+        500,
+        350,
+        1000
+      ],
+      "sdk_uv": [
+        480,
+        340
+      ],
+      "factory_direct_Rt_projection": [
+        480.348314971616,
+        340.38298139471124
+      ],
+      "integer_floor_matches": true
+    }
+  ],
+  "manual_checks": [
+    {
+      "record": "data/rgbd-hardware-d2c-001/correspondence_0002.json",
+      "source": "USER_INDICATED_IMAGE_CORRESPONDENCE",
+      "depth_uv": [
+        172,
+        279
+      ],
+      "rgb_uv": [
+        168,
+        276
+      ],
+      "rgb_minus_depth_uv": [
+        -4,
+        -3
+      ],
+      "pixel_residual_norm": 5.0,
+      "registered_depth_value": 768,
+      "note": "Manual feature localization error included; not metric calibration or XYZ accuracy",
+      "frozen_pair_age_at_save_seconds": 2.0025701419999677,
+      "host_return_time_delta_seconds": 0.004610479000120904,
+      "raw_values_and_coordinates_verified": true
+    },
+    {
+      "record": "data/rgbd-hardware-d2c-001/correspondence_0003.json",
+      "source": "USER_INDICATED_IMAGE_CORRESPONDENCE",
+      "depth_uv": [
+        438,
+        165
+      ],
+      "rgb_uv": [
+        439,
+        165
+      ],
+      "rgb_minus_depth_uv": [
+        1,
+        0
+      ],
+      "pixel_residual_norm": 1.0,
+      "registered_depth_value": 913,
+      "note": "Manual feature localization error included; not metric calibration or XYZ accuracy",
+      "frozen_pair_age_at_save_seconds": 1.857288730999926,
+      "host_return_time_delta_seconds": 0.05204605499989157,
+      "raw_values_and_coordinates_verified": true
+    },
+    {
+      "record": "data/rgbd-hardware-d2c-001/correspondence_0004.json",
+      "source": "USER_INDICATED_IMAGE_CORRESPONDENCE",
+      "depth_uv": [
+        312,
+        356
+      ],
+      "rgb_uv": [
+        315,
+        352
+      ],
+      "rgb_minus_depth_uv": [
+        3,
+        -4
+      ],
+      "pixel_residual_norm": 5.0,
+      "registered_depth_value": 809,
+      "note": "Manual feature localization error included; not metric calibration or XYZ accuracy",
+      "frozen_pair_age_at_save_seconds": 5.512812260999908,
+      "host_return_time_delta_seconds": 0.0378610350001054,
+      "raw_values_and_coordinates_verified": true
+    }
+  ],
+  "manual_pixel_offset_mean": 3.6666666666666665,
+  "manual_pixel_offset_max": 5.0,
+  "manual_pixel_offset_rms": 4.123105625617661,
+  "manual_metric_caution": "Only 3 manually indicated image features in one static scene; includes clicking error; not calibration-board reprojection RMSE or metric XYZ accuracy",
+  "basic_static_scene_pixel_mapping_check": "COMPLETED_WITH_OBSERVED_1_TO_5_PIXEL_OFFSETS",
+  "rgb_depth_alignment_verified": false,
+  "hardware_synchronization_verified": false,
+  "geometry_verified": false,
+  "physical_accuracy_verified": false,
+  "raw_baseline": "data/rgbd-raw-baseline-001/auto_0001.json",
+  "registered_preview": "data/rgbd-hardware-d2c-001/auto_0001.json",
+  "factory_depth_intrinsics_fx_fy_cx_cy": [
+    580.2138061523438,
+    580.2138061523438,
+    321.84844970703125,
+    236.6637725830078
+  ],
+  "factory_color_intrinsics_fx_fy_cx_cy": [
+    542.7213134765625,
+    542.7213134765625,
+    324.996826171875,
+    235.30755615234375
+  ],
+  "factory_depth_distortion_k1_k2_p1_p2_k3": [
+    -0.0888294205069542,
+    0.18107956647872925,
+    -0.003296514041721821,
+    0.0038822616916149855,
+    -0.08740498125553131
+  ],
+  "factory_color_distortion_k1_k2_p1_p2_k3": [
+    0.11717115342617035,
+    -0.20204369723796844,
+    -0.0022144110407680273,
+    0.0028417662251740694,
+    -0.00013461797789204866
+  ],
+  "factory_translation_norm_same_depth_units": 24.984776538979446,
+  "distortion_state_query": {
+    "status": 4,
+    "value": null
+  },
+  "mode_switch_smoke": {
+    "raw": {
+      "source": "REAL_CAMERA",
+      "started_utc": "2026-11-01T09:45:37.359346+00:00",
+      "width": 640,
+      "height": 480,
+      "nominal_fps": 30,
+      "pixel_format_enum": 100,
+      "millimeters_per_raw_unit": 1,
+      "mirroring": false,
+      "registration_mode": 0,
+      "factory_depth_intrinsics_fx_fy_cx_cy": [
+        580.2138061523438,
+        580.2138061523438,
+        321.84844970703125,
+        236.6637725830078
+      ],
+      "factory_depth_distortion_k1_k2_p1_p2_k3": [
+        -0.0888294205069542,
+        0.18107956647872925,
+        -0.003296514041721821,
+        0.0038822616916149855,
+        -0.08740498125553131
+      ],
+      "sdk_effective_projection_fx_fy_cx_cy": [
+        580.2137963113162,
+        580.2138299101264,
+        319.9999846486341,
+        240.00001123766836
+      ],
+      "distortion_state": {
+        "status": 4,
+        "value": null
+      },
+      "coordinate_frame": "camera_depth_optical_sdk",
+      "axes": "right, down, forward",
+      "coordinate_method": "SDK native conversion with Y sign reversed",
+      "pixel_domain": "UNREGISTERED_DEPTH",
+      "registered_z_semantics": null,
+      "geometry_verified": false,
+      "physical_accuracy_verified": false,
+      "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+      "rgb_used": false
+    },
+    "registered": {
+      "source": "REAL_CAMERA",
+      "started_utc": "2026-11-01T09:45:35.842386+00:00",
+      "width": 640,
+      "height": 480,
+      "nominal_fps": 30,
+      "pixel_format_enum": 100,
+      "millimeters_per_raw_unit": 1,
+      "mirroring": false,
+      "registration_mode": 1,
+      "factory_depth_intrinsics_fx_fy_cx_cy": [
+        580.2138061523438,
+        580.2138061523438,
+        321.84844970703125,
+        236.6637725830078
+      ],
+      "factory_depth_distortion_k1_k2_p1_p2_k3": [
+        -0.0888294205069542,
+        0.18107956647872925,
+        -0.003296514041721821,
+        0.0038822616916149855,
+        -0.08740498125553131
+      ],
+      "sdk_effective_projection_fx_fy_cx_cy": null,
+      "distortion_state": {
+        "status": 4,
+        "value": null
+      },
+      "coordinate_frame": "UNASSIGNED_REGISTERED_DEPTH",
+      "axes": "Pixel mapping diagnostic only",
+      "coordinate_method": "Not provided for registered pixels",
+      "pixel_domain": "SDK_DEPTH_TO_COLOR_OUTPUT",
+      "registered_z_semantics": "SDK output; metric frame not independently verified",
+      "geometry_verified": false,
+      "physical_accuracy_verified": false,
+      "geometry_status": "SDK_MODEL_FACTORY_PRINCIPAL_DIFFERS_DISTORTION_STATE_UNVERIFIED",
+      "rgb_used": false
+    }
+  },
+  "registered_preview_jpeg_warnings": [
+    "Corrupt JPEG data: premature end of data segment"
+  ]
+}
