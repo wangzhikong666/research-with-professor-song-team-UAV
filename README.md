@@ -210,3 +210,50 @@ bash scripts/build_ir_preview.sh
 本目录已克隆并关联用户的 GitHub 仓库。SDK、现场图像和原始采集默认不上传。
 代码、项目脚本和阶段验收记录通过独立分支及 Pull Request 提交，由仓库所有者审查合并。SDK、构建产物、现场图像、原始采集、日志与虚拟环境由 `.gitignore` 排除。
 本次提交使用已连接 GitHub 账号的身份；本机若需配置提交作者，仅使用仓库级 `git config user.name/user.email`，无需修改全局。
+
+## Astra 实时桌面搜索
+
+在 Ubuntu 桌面打开终端，从仓库根目录运行。相机由操作者手持转动，程序通过已有的 UVC 彩色接口取图，并在当前处理帧上画中文标签。桌面原型使用 OpenCV Zoo 的 COCO 预训练 YOLOX，无需训练或准备标注数据。
+
+本机已有 OpenCV、NumPy、Pillow 和 Noto Sans CJK。新环境需要为项目解释器提供这些依赖（Ubuntu 软件包为 `python3-opencv`、`python3-numpy`、`python3-pil`、`fonts-noto-cjk`）。首次运行前下载权重：
+
+```bash
+mkdir -p third_party/desktop-search
+curl -fL 'https://huggingface.co/opencv/opencv_zoo/resolve/main/models/object_detection_yolox/object_detection_yolox_2022nov.onnx' \
+  -o third_party/desktop-search/object_detection_yolox_2022nov.onnx
+```
+
+运行预览：
+
+```bash
+.venv/bin/python camera/astra_pro_plus/desktop_search.py --device /dev/video0
+```
+
+- 把鼠标放在笔记本左侧或右侧。先把镜头对准笔记本，让鼠标留在视野外。检测到笔记本时，黄色框显示「第二优先级 · 笔记本」，状态栏提示「优先查看笔记本两侧」。如桌面布置已知，可加 `--side left` 或 `--side right`。
+- 手持相机转向鼠标，画面中出现鼠标时，绿色框显示「第一优先级 · 鼠标」。任何一帧识别到鼠标即记为成功，状态栏保留「已找到鼠标」，取流和逐帧画框继续运行。按 Q 或 Esc 退出，重新运行可开始下一轮。
+- 暂无目标或线索时显示「继续扫描」。提示由当前画面的检测结果触发，转向由操作者执行。
+- 框旁的百分比是检测置信度。只有置信度达到 60% 的检测才会画框并参与搜索判断。需要更严格时，可加 `--confidence 0.75` 等参数。
+- 如果彩色节点变化，用 `v4l2-ctl --list-devices` 查找 Astra 的彩色视频节点，再传给 `--device`。终端会输出状态变化和本轮汇总。
+
+### 同屏显示三维坐标
+
+关闭占用相机的其他预览后，启动 RGB-D 模式：
+
+```bash
+.venv/bin/python camera/astra_pro_plus/desktop_search.py --device /dev/video0 --xyz
+```
+
+标签第二行显示相对深度相机的 XYZ，单位为米，X 向右、Y 向下、Z 向前。框内十字标记的是检测框中心附近的实测表面采样点。每个位置会用 SDK 检查原始深度像素与彩色画面的对应关系。坐标用于预览，物体中心和机械臂坐标需要另行测量或标定。
+
+两路画面按主机收到帧的时间配对，最大时间差为 50 毫秒，曝光同步和绝对精度尚未验收。手持时可先停稳再读坐标。缺少匹配深度帧或有效测点时显示「深度不可用」，下一帧重新测量。若缺少 OpenNI 桥接库，先按已有 SDK 环境说明运行 `bash scripts/build_ir_preview.sh`。
+
+深度设备连接、读取或坐标转换失败时，程序保留彩色识别，窗口底部显示失败阶段，终端保留 SDK 原始错误。底部也会提示等待配对、深度画面全零或目标区域缺少深度。设备连接恢复后，重新启动程序即可重新连接深度通道。
+
+2026-11-11 实机复测：Ubuntu 重启后独立深度探针可正常打开，初始场景连续 300 帧全零。用户调整拍摄位置后，实时 RGB-D 预览处理 60 帧，60 帧配对成功且均含非零深度，14 帧为检测目标输出了 XYZ，第 16 帧识别到鼠标。此记录验证了实时识别与表面坐标链路，坐标绝对精度仍需量尺或标定目标核验。初始化失败、读取中断、SDK 转换失败及全零深度的退化显示已通过模拟故障验证。
+
+用已有图片或视频检查识别结果时，可在同一个程序中用 `--image` 或 `--video` 替换相机输入：
+
+```bash
+.venv/bin/python camera/astra_pro_plus/desktop_search.py \
+  --image /path/to/desk.jpg --headless --save-preview data/desktop-search-preview.png
+```
