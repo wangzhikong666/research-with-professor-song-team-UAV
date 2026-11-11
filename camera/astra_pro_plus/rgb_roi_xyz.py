@@ -10,6 +10,7 @@ import numpy as np
 from depth_camera import DepthCamera, utc_now
 from rgbd_registration import pair_is_fresh
 from rgb_roi_depth import FactoryProjection, in_box, surface_candidates
+from surface_reference import SurfaceReference
 from uvc_stream import UvcColorStream
 
 
@@ -25,6 +26,11 @@ STATUS_TEXT={
     'NO_USABLE_DEPTH':'No usable depth in the measurement range',
     'RGB_BOX_TOO_SMALL_OR_OUTSIDE_IMAGE':'Select a region at least 24 x 24 pixels',
     'STALE_PAIR':'Waiting for fresh RGB and depth',
+    'REFERENCE_CLICK_REQUIRED':'RIGHT-click the intended surface inside your RGB box',
+    'REFERENCE_CLICK_TOO_CLOSE_TO_BOX_EDGE':'Right-click farther inside your RGB box',
+    'REFERENCE_CLICK_ON_DEPTH_BOUNDARY':'Click is between depth layers: right-click within one surface',
+    'REFERENCE_LOCAL_DEPTH_MISSING':'Reference surface: current local depth is missing or unreliable',
+    'REFERENCE_DEPTH_CHANGED_RESELECT':'Reference depth changed: restore scene or RIGHT-click a new surface',
 }
 
 
@@ -71,6 +77,8 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--device',default='/dev/video0')
     parser.add_argument('--seconds',type=float,default=600)
+    parser.add_argument('--compare-baseline',action='store_true',help='Evaluate previous largest-surface selector on the SAME live frames')
+    parser.add_argument('--restore-selection',type=Path,help='Restore a previous static-scene box/anchor; acquire fresh depth, not old XYZ')
     parser.add_argument('--control',type=Path,default=Path('logs/rgb-roi-xyz.control.json'))
     args=parser.parse_args()
     if not 0<args.seconds<=3600:parser.error('seconds must be 0..3600')
@@ -78,21 +86,35 @@ def main():
     stopped=False; box=None; selection=None; drag=None; displayed=None; frozen=None
     last_pair=None; measured_pair=None; last_result=None; last_mask=np.zeros((480,640),np.uint8)
     last_command=None; stable=[]; sequence=0; autosaved=False; config_written=False
-    title='Astra RGB ROI to SDK XYZ - drag LEFT RGB - C clear S save Q close'
+    reference=SurfaceReference(); statistics={'samples':0,'valid_samples':0,'baseline_valid_samples':0}
+    title='Astra surface XYZ - drag LEFT RGB box, RIGHT-click surface - Q close'
 
     def stop(*_):
         nonlocal stopped
         stopped=True
 
     def select(new_box,source):
-        nonlocal box,selection,stable,autosaved,last_result
+        nonlocal box,selection,stable,autosaved,last_result,statistics
         box=new_box
         selection={'source':source,'rgb_box_xywh':box,'selected_at_utc':utc_now()}
         stable=[]; autosaved=False; last_result=None
+        reference.reset(); statistics={'samples':0,'valid_samples':0,'baseline_valid_samples':0}
         print('RGB_SELECTION '+json.dumps(selection),flush=True)
+
+    def set_anchor(uv,source):
+        nonlocal selection,stable,autosaved,last_result,statistics
+        if box is None:return
+        reference.reset(uv); stable=[]; autosaved=False; last_result=None
+        selection=dict(selection,anchor_rgb_uv=list(uv),anchor_source=source,anchor_selected_at_utc=utc_now())
+        statistics={'samples':0,'valid_samples':0,'baseline_valid_samples':0}
+        print('SURFACE_REFERENCE_SELECTED '+json.dumps(selection),flush=True)
 
     def mouse(event,x,y,_flags,_param):
         nonlocal drag,frozen
+        if event==cv2.EVENT_RBUTTONDOWN and 0<=x<640 and 0<=y<480:
+            if displayed is not None and pair_is_fresh(displayed,time.monotonic()):
+                drag=None; frozen=None; set_anchor([x,y],'USER_RGB_RIGHT_CLICK')
+            return
         if event==cv2.EVENT_LBUTTONDOWN and 0<=x<640 and 0<=y<480:
             if displayed is not None and pair_is_fresh(displayed,time.monotonic()):
                 drag=[x,y,x,y]; frozen=displayed
@@ -106,6 +128,12 @@ def main():
             drag=None; frozen=None
 
     signal.signal(signal.SIGINT,stop); signal.signal(signal.SIGTERM,stop)
+    if args.restore_selection:
+        previous=json.loads(args.restore_selection.read_text())
+        select(previous['rgb_box_xywh'],'RESTORED_PREVIOUS_SELECTION')
+        if previous.get('anchor_rgb_uv') is not None:
+            set_anchor(previous['anchor_rgb_uv'],'RESTORED_PREVIOUS_REFERENCE')
+        selection['restored_selection']=previous
     color=UvcColorStream(args.device).start()
     try:
         with DepthCamera() as camera:
@@ -123,6 +151,37 @@ def main():
                     'hardware_synchronized':False,'rgb_depth_alignment_verified':False,
                     'pairing_note':'Host read-return times only; static camera and target required',
                     'region_note':'User image region, not semantic segmentation or object tracking'}
+
+            def checked_sample(point):
+                u,v=point['depth_pixel_uv']; raw=point['raw_depth']
+                sdk_uv=mapping.pixel(u,v,raw)
+                delta=max(abs(a-b) for a,b in zip(sdk_uv,point['predicted_rgb_uv']))
+                if delta>2 or not in_box(sdk_uv,box) or not camera.minimum<=raw<=camera.maximum:return None
+                xyz=camera.optical_xyz_m(u,v,raw)
+                if not np.isfinite(xyz).all():return None
+                return {'depth_pixel_uv':[u,v],'native_sdk_rgb_uv':sdk_uv,
+                        'raw_depth':raw,'depth_mm':raw,'model_sdk_difference_px':delta,
+                        'position_m':xyz,'quality':dict(point['quality'],
+                        depth_selection='Exact current original-depth sample; no substitution, filling or held XYZ')}
+
+            def baseline_on_frame(depth,now):
+                nonlocal stable
+                candidates,_=surface_candidates(depth['raw'],box,mapping.projection)
+                baseline={'valid':False,'reason':candidates['reason']}
+                if candidates['valid']:
+                    for point in candidates['candidate_points'][:3]:
+                        sample=checked_sample(point)
+                        if sample is None:continue
+                        raw=sample['raw_depth']
+                        if stable and abs(stable[-1][1]-raw)>30:stable=[]
+                        if not stable or stable[-1][2]!=depth['frame_index']:
+                            stable.append((now,raw,depth['frame_index']))
+                        stable=stable[-4:]
+                        ready=len(stable)>=3 and now-stable[0][0]>=.25
+                        baseline.update(valid=ready,reason='SDK_SURFACE_POINT_AVAILABLE' if ready else 'WAITING_FOR_CONSECUTIVE_VALID_DEPTH')
+                        break
+                if not baseline['valid'] and baseline['reason']!='WAITING_FOR_CONSECUTIVE_VALID_DEPTH':stable=[]
+                return baseline
 
             def save(pair,result,mask,tag):
                 nonlocal sequence
@@ -152,8 +211,10 @@ def main():
                             'color':config,'factory_parameters_float30':mapping.parameters,
                             'synthetic_sdk_preflight':mapping.preflight,'application_depth_range_mm':[600,4000],
                             'registration_mode':0,'mapping_method':'Native SDK PIXEL_D2C for selected original-depth pixel',
+                            'selection_method':'User RGB surface reference; fixed original pixel, bounded same-surface neighbor fallback',
+                            'compare_previous_selector_on_same_frames':args.compare_baseline,
                             'preselection_note':'Factory pinhole model without additional distortion correction; verified against SDK queries, not physical calibration'})
-                        print('RGB_ROI_READY: drag a tight visible surface region in LEFT RGB',flush=True)
+                        print('RGB_ROI_READY: drag LEFT RGB box, then RIGHT-click intended surface',flush=True)
                         config_written=True
                     if now-last_process>=.12:
                         result=record_base('WAITING_FOR_FRESH_PAIR'); mask=np.zeros_like(last_mask)
@@ -167,36 +228,42 @@ def main():
                                 color_host_received_utc=rgb_frame['host_received_utc'],
                                 color_host_read_index=rgb_frame['host_read_index'],
                                 host_read_return_time_difference_seconds=pair['host_time_delta'])
-                            candidates,mask=surface_candidates(depth['raw'],box,mapping.projection)
+                            candidates,mask=reference.candidates(depth['raw'],box,mapping.projection,camera.minimum,camera.maximum)
                             result.update({k:v for k,v in candidates.items() if k not in ('valid','position_m','candidate_points')})
                             if candidates['valid']:
                                 result['reason']='NO_CANDIDATE_PASSES_NATIVE_D2C'
                                 for point in candidates['candidate_points'][:3]:
-                                    u,v=point['depth_pixel_uv']; raw=point['raw_depth']
-                                    sdk_uv=mapping.pixel(u,v,raw)
-                                    delta=max(abs(a-b) for a,b in zip(sdk_uv,point['predicted_rgb_uv']))
-                                    if delta>2 or not in_box(sdk_uv,box):continue
-                                    # SDK range is checked again with actual device bounds.
-                                    if not camera.minimum<=raw<=camera.maximum:continue
-                                    xyz=camera.optical_xyz_m(u,v,raw)
-                                    if not np.isfinite(xyz).all():continue
-                                    result.update(depth_pixel_uv=[u,v],native_sdk_rgb_uv=sdk_uv,
-                                        raw_depth=raw,depth_mm=raw,model_sdk_difference_px=delta,
-                                        quality=dict(point['quality'],depth_selection='Exact selected original-depth pixel; no median substitution or filling'))
-                                    # A short availability gate, not a repeatability/accuracy test.
-                                    if stable and abs(stable[-1][1]-raw)>30:
-                                        stable=[]
-                                    if not stable or stable[-1][2]!=depth['frame_index']:
-                                        stable.append((now,raw,depth['frame_index']))
-                                    stable=stable[-4:]
-                                    if len(stable)>=3 and now-stable[0][0]>=.25:
-                                        result.update(valid=True,position_m=xyz,reason='SDK_SURFACE_POINT_AVAILABLE')
+                                    sample=checked_sample(point)
+                                    if sample is None:continue
+                                    if np.linalg.norm(np.asarray(sample['native_sdk_rgb_uv'])-reference.anchor)>reference.rgb_radius_px:continue
+                                    if not pair_is_fresh(pair,time.monotonic()):break
+                                    reference.bind(point,sample['native_sdk_rgb_uv'])
+                                    result.update({k:v for k,v in sample.items() if k!='position_m'})
+                                    result['sample_offset_from_reference_depth_px']=reference.sample_offset(point)
+                                    result['same_original_depth_pixel']=result['sample_offset_from_reference_depth_px']==0
+                                    if reference.accept(depth['frame_index'],now):
+                                        result.update(valid=True,position_m=sample['position_m'],reason='SDK_SURFACE_POINT_AVAILABLE')
                                     else:result['reason']='WAITING_FOR_CONSECUTIVE_VALID_DEPTH'
                                     break
-                        if not result['valid'] and result['reason']!='WAITING_FOR_CONSECUTIVE_VALID_DEPTH':stable=[]
+                            if args.compare_baseline and reference.anchor is not None:
+                                result['comparison_baseline']=baseline_on_frame(depth,now)
+                        if not result['valid'] and result['reason']!='WAITING_FOR_CONSECUTIVE_VALID_DEPTH':reference.reject()
                         # Computation can take time: never publish coordinates for an aged pair.
                         if not pair_is_fresh(last_pair,time.monotonic()):
-                            result.update(valid=False,position_m=None,reason='STALE_PAIR'); stable=[]
+                            result.update(valid=False,position_m=None,reason='STALE_PAIR'); reference.reject(); stable=[]
+                            if 'comparison_baseline' in result:result['comparison_baseline']={'valid':False,'reason':'STALE_PAIR'}
+                        result['surface_reference']=reference.metadata()
+                        if reference.reference is not None and last_pair is not None:
+                            ru,rv=reference.reference['depth_pixel_uv'];current=last_pair['depth']['raw']
+                            result['reference_current_raw_depth']=int(current[rv,ru])
+                            patch=current[max(0,rv-4):rv+5,max(0,ru-4):ru+5]
+                            result['reference_patch_shape']=list(patch.shape)
+                            result['reference_patch_zero_fraction']=float(np.mean(patch==0))
+                        if reference.anchor is not None:
+                            statistics['samples']+=1
+                            statistics['valid_samples']+=int(result['valid'])
+                            statistics['baseline_valid_samples']+=int(result.get('comparison_baseline',{}).get('valid',False))
+                        result['availability_statistics']=dict(statistics)
                         result['recorded_at_utc']=utc_now()
                         write_json(args.output/'latest.json',result)
                         observations.write(json.dumps(result,allow_nan=False)+'\n'); observations.flush()
@@ -213,18 +280,25 @@ def main():
                             x,y,w,h=box; cv2.rectangle(left,(x,y),(x+w-1,y+h-1),(0,255,255),2)
                         if drag is not None:
                             cv2.rectangle(left,tuple(drag[:2]),tuple(drag[2:]),(0,255,255),2)
+                        if reference.anchor is not None:
+                            cv2.circle(left,tuple(reference.anchor),7,(255,255,0),1)
                         if last_result and last_result['valid'] and pair_is_fresh(measured_pair,time.monotonic()):
                             cv2.drawMarker(left,tuple(last_result['native_sdk_rgb_uv']),(0,255,0),cv2.MARKER_CROSS,19,2)
                             cv2.drawMarker(right,tuple(last_result['depth_pixel_uv']),(255,255,255),cv2.MARKER_CROSS,19,2)
-                        cv2.putText(left,'TRUE RGB: drag visible target surface',(8,22),cv2.FONT_HERSHEY_SIMPLEX,.5,(0,255,255),1)
-                        cv2.putText(right,'ORIGINAL DEPTH: false colors, NOT RGB',(8,22),cv2.FONT_HERSHEY_SIMPLEX,.5,(255,255,255),1)
-                        canvas=np.vstack((np.hstack((left,right)),np.zeros((110,1280,3),np.uint8)))
-                    else:canvas=np.zeros((590,1280,3),np.uint8)
+                        cv2.putText(left,'RGB: drag box, RIGHT-click reference surface',(8,22),cv2.FONT_HERSHEY_SIMPLEX,.5,(0,255,255),1)
+                        cv2.putText(right,'DEPTH: black = zero or outside 600-4000 mm',(8,22),cv2.FONT_HERSHEY_SIMPLEX,.5,(255,255,255),1)
+                        canvas=np.vstack((np.hstack((left,right)),np.zeros((135,1280,3),np.uint8)))
+                    else:canvas=np.zeros((615,1280,3),np.uint8)
                     result=last_result or record_base('WAITING_FOR_FRESH_PAIR')
+                    if result['valid'] and not pair_is_fresh(measured_pair,time.monotonic()):
+                        result=dict(result,valid=False,position_m=None,reason='STALE_PAIR')
                     lines=[STATUS_TEXT.get(result['reason'],result['reason']),
-                        'XYZ (m) = '+str(result['position_m']) if result['valid'] else 'XYZ unavailable: no previous coordinates retained',
-                        'Camera optical frame: right/down/forward. Measured surface point, not grasp point.',
-                        'C: clear box | S: save RGB + ORIGINAL 16-bit depth | Q: close | Static scene; not hardware synchronized']
+                        'XYZ camera (m; right/down/forward) = '+str(result['position_m']) if result['valid'] else 'XYZ unavailable: no previous coordinates retained',
+                        'Reference depth pixel: '+str(reference.metadata()['reference_depth_pixel_uv'])+
+                            ' | raw(sample): '+str(result.get('reference_current_raw_depth'))+
+                            ' | sample offset (px): '+str(result.get('sample_offset_from_reference_depth_px')),
+                        'Current valid samples: '+str(statistics['valid_samples'])+'/'+str(statistics['samples'])+' (availability, not accuracy)',
+                        'RIGHT-click: reselect surface | C: clear | S: save | Q: close | Fixed camera + target required']
                     for i,line in enumerate(lines):
                         cv2.putText(canvas,line,(8,501+i*24),cv2.FONT_HERSHEY_SIMPLEX,.46,(0,255,255),1)
                     cv2.imshow(title,canvas); displayed=pair if frozen is not None or pair_is_fresh(pair,time.monotonic()) else None
@@ -242,6 +316,7 @@ def main():
                                 if action=='stop':stop()
                                 elif action=='clear':select(None,'AGENT_DIAGNOSTIC_CLEAR')
                                 elif action=='set_roi':select(command['box'],command.get('source','AGENT_DIAGNOSTIC'))
+                                elif action=='set_anchor':set_anchor(command['uv'],command.get('source','AGENT_DIAGNOSTIC_REFERENCE'))
                                 elif action=='save' and last_result and pair_is_fresh(measured_pair,time.monotonic()):
                                     save(measured_pair,last_result,last_mask,'chat_snapshot')
                         except (OSError,ValueError,KeyError) as error:print('CONTROL_ERROR '+str(error),flush=True)
